@@ -26,7 +26,6 @@ fun startActivityForFacebookResult(
     }
 
     LaunchedEffect(key1 = key){
-        Log.d("facebookuser","$key")
         launcher(activityLauncher,context)
     }
 
