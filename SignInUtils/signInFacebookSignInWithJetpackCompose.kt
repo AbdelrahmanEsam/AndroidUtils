@@ -1,15 +1,33 @@
- val rememberLauncher = rememberLauncherForActivityResult(
-        contract = LoginManager.getInstance().createLogInActivityResultContract()
-    ){
-        LoginManager.getInstance().onActivityResult(it.resultCode, it.data, object : FacebookCallback<LoginResult> {
+@Composable
+fun startActivityForFacebookResult(
+    key : Any,
+    onResultReceived : (AccessToken) -> Unit,
+    onDialogDismiss : () -> Unit,
+    launcher: (ManagedActivityResultLauncher<Collection<String>, CallbackManager.ActivityResultParameters>,context:Context) -> Unit
+) {
+
+    val context = LocalContext.current
+    val activityLauncher = rememberLauncherForActivityResult(contract = LoginManager.getInstance().createLogInActivityResultContract()){ result ->
+        LoginManager.getInstance().onActivityResult(result.resultCode, result.data, object : FacebookCallback<LoginResult> {
             override fun onSuccess(result: LoginResult) {
-                Toast.makeText(activity, "success", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "success", Toast.LENGTH_SHORT).show()
+               onResultReceived(result.accessToken)
             }
             override fun onCancel() {
-                Toast.makeText(activity, "cancel", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "cancel", Toast.LENGTH_SHORT).show()
+               onDialogDismiss()
             }
             override fun onError(error: FacebookException) {
-                Toast.makeText(activity, error.message, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "error", Toast.LENGTH_SHORT).show()
+               onDialogDismiss()
             }
         })
+
     }
+
+    LaunchedEffect(key1 = key){
+        Log.d("facebookuser","$key")
+        launcher(activityLauncher,context)
+    }
+
+}
