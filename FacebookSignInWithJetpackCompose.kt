@@ -6,7 +6,7 @@
                 Toast.makeText(activity, "success", Toast.LENGTH_SHORT).show()
             }
             override fun onCancel() {
-                Toast.makeText(activity, "cancer", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "cancel", Toast.LENGTH_SHORT).show()
             }
             override fun onError(error: FacebookException) {
                 Toast.makeText(activity, error.message, Toast.LENGTH_LONG).show()
